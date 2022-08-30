@@ -20,6 +20,11 @@ print_cpu_temp() {
     fi
     echo "$val" | sed -e 's/^Tccd/Core /' | awk -v format="$cpu_temp_format$cpu_temp_unit" '/^Core [0-9]+/ {gsub("[^0-9.]", "", $3); sum+=$3; n+=1} END {printf(format, sum/n)}'
   fi
+  if command_exists "vcgencmd"; then
+    local val
+      val="$(vcgencmd measure_temp | tr -d -c 0-9.)"
+    echo "$val"
+  fi
 }
 
 main() {
