@@ -22,7 +22,11 @@ print_cpu_temp() {
   fi
   if command_exists "vcgencmd"; then
     local val
+    if [[ "$cpu_temp_unit" == F ]]; then
+      val="$(vcgencmd measure_temp | awk -F "[=']" '{print($2 * 1.8)+32}')"
+    else
       val="$(vcgencmd measure_temp | tr -d -c 0-9.)"
+    fi
     echo "$val"
   fi
 }
